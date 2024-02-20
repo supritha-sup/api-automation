@@ -1,0 +1,487 @@
+{
+	"info": {
+		"_postman_id": "48a191fc-20a2-4d61-9f63-1bcf74fcea9e",
+		"name": "ecom-api-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26091656"
+	},
+	"item": [
+		{
+			"name": "login",
+			"item": [
+				{
+					"name": "Login user and get token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('validate response header content-type', function () {\r",
+									"    pm.expect(pm.response.headers.get('content-type')).to.eql('application/json; charset=utf-8');\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Validate the existence of all keys and ensure the correct data types for their values\", function() {\r",
+									"    responsejson = pm.response.json();\r",
+									"    pm.expect(responsejson).to.have.property(\"id\").that.is.a('number');\r",
+									"    pm.expect(responsejson).to.have.property(\"username\").that.is.a('string');\r",
+									"    pm.expect(responsejson).to.have.property(\"email\").that.is.a('string');\r",
+									"    pm.expect(responsejson).to.have.property(\"firstName\").that.is.a('string');\r",
+									"    pm.expect(responsejson).to.have.property(\"lastName\").that.is.a('string');\r",
+									"    pm.expect(responsejson).to.have.property(\"gender\").that.is.a('string');\r",
+									"    pm.expect(responsejson).to.have.property(\"image\").that.is.a('string');\r",
+									"    pm.expect(responsejson).to.have.property(\"token\").that.is.a('string');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"username\": \"kminchelle\",\r\n\"password\": \"0lelplR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get current auth user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "get-all-products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"validate status code is 200\", function() {\r",
+									"    pm.response.to.have.status(200)\r",
+									"})\r",
+									"pm.test(\"validate response time is lessthan 400ms\", function() {\r",
+									"    pm.expect(pm.response.responseTime).to.be.lessThan(500)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-single-product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"validate response body field:title of product\", function() {\r",
+									"    responsejson = pm.response.json()\r",
+									"    pm.expect(responsejson.title).to.be.eql(\"iPhone 9\")\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "serach products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"validate no of products searched\", function() {\r",
+									"    responsejson = pm.response.json()\r",
+									"    //check if response conatins products\r",
+									"    if (responsejson.products) {\r",
+									"        const totalproducts = responsejson.products.length\r",
+									"        pm.expect(totalproducts).to.be.above(5)\r",
+									"        console.log(\"total no of products\",totalproducts)\r",
+									"    } else {\r",
+									"        console.log(\"no productsfound\")\r",
+									"    }\r",
+									"\r",
+									"})\r",
+									"//get total skip and limits \r",
+									"pm.test(\"validating count of total,skip and limit\", function() {\r",
+									"    responsejson=pm.response.json()\r",
+									"    totalproducts = responsejson.total\r",
+									"    totalskip = responsejson.skip\r",
+									"    console.log(\"totalcount\",totalproducts)\r",
+									"    console.log(\"skips\",totalskip)\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/search?q=phone",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "phone"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Limit and skip products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products?limit=10&skip=10&select=title,price",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "skip",
+									"value": "10"
+								},
+								{
+									"key": "select",
+									"value": "title,price"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all products categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get products of a category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/category/smartphones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"category",
+								"smartphones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"title\": \"BMW Pencil\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"iPhone Galaxy +1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1?Content-Type=application/json",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							],
+							"query": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"var base_url = 'https://dummyjson.com'",
+					"",
+					"// Send a request to authenticate and get the token",
+					"pm.sendRequest({",
+					"    url: base_url + '/auth/login',",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/json'",
+					"    },",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: JSON.stringify({",
+					"            username: 'kminchelle',",
+					"            password: '0lelplR'",
+					"        })",
+					"    }",
+					"}, function (err, res) {",
+					"    if (err) {",
+					"        console.error(err);",
+					"        return;",
+					"    }",
+					"    ",
+					"    // Extract the token from the response",
+					"    var token = res.json().token;",
+					"",
+					"    // Set as a collection variable",
+					"    console.log(\"Setting auth_token collection variable\")",
+					"    pm.collectionVariables.set('auth_token', token);",
+					"    console.log(\"Setting base_url collection variable\")",
+					"    pm.collectionVariables.set('base_url', base_url);",
+					"",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_token",
+			"value": ""
+		},
+		{
+			"key": "base_url",
+			"value": ""
+		}
+	]
+}
